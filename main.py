@@ -1,10 +1,16 @@
 import os
 import shutil
-import tqdm
+from tqdm import tqdm
 import glob
+import datetime
 
-count=0
-for i in os.listdir('/Volumes/Untitled/DCIM/100MSDCF'):
+newfiles=[]
+
+print('Finding new files that have not been backed up...')
+
+for i in tqdm(os.listdir('/Volumes/Untitled/DCIM/100MSDCF')):
     if len(glob.glob('/Volumes/Media_NM/**/' + 'DSC04183.JPG',recursive=True))!=0:
-        count+=1
-print(count)
+        newfiles.append(os.path.abspath(i))
+
+print(f'Find completed. Found {len(newfiles)} new photos.')
+print(f'Creating folder Backup_{datetime.datetime.today().strftime("%d%b%Y")}')
