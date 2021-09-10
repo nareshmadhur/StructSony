@@ -5,6 +5,13 @@ import glob
 import datetime
 import sys
 
+def isProceed():
+    proceed = input()
+    if proceed in ['y', 'Y']:
+        print('Proceeding with default path.')
+    else:
+        print('Terminating script.')
+        exit()
 
 def find_newfiles():
     newfiles = []
@@ -59,23 +66,13 @@ def validate(arg1, arg2):
 
     if not os.path.exists(arg1):
         print(f'SDCARD Path not valid. Choose default path? \n({sdcard_loc}) [Y/n]:')
-        proceed = input()
-        if proceed in ['y', 'Y']:
-            print('Proceeding with default path.')
-        else:
-            print('Terminating script.')
-            exit()
+        isProceed()
     else:
         sdcard_loc = arg1
 
     if not os.path.exists(arg2):
         print(f'BACKUP Path not valid. Choose default path? \n({backup_loc}) [Y/n]:')
-        proceed = input()
-        if proceed in ['y', 'Y']:
-            print('Proceeding with default path.')
-        else:
-            print('Terminating script.')
-            exit()
+        isProceed()
     else:
         backup_loc = arg2
 
@@ -92,9 +89,10 @@ if __name__ == '__main__':
         arg1 = str(sys.argv[1])
         arg2 = str(sys.argv[2])
         validate(arg1, arg2)
-
     else:
-        print('Parameters not used. Using default arguments')
+        print(f'Parameters not used. Using default arguments - {sdcard_loc} for SDCard and {backup_loc} for Backup\
+Location.\nContinue?')
+        isProceed()
 
 
     newfiles = find_newfiles()
