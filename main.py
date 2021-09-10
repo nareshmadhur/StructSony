@@ -15,7 +15,6 @@ def isProceed():
 
 def find_newfiles():
     newfiles = []
-
     print('\n-------------\nFinding new files that have not been backed up...\n-------------\n')
 
     for i in tqdm(os.listdir(sdcard_loc)):
@@ -33,14 +32,17 @@ def make_backup(newfiles):
         print(f'\n-------------\nCreating folder Backup_{newfolder}\n-------------\n')
 
         backup_loc_newfolder = os.path.join(backup_loc, newfolder)
-        os.mkdir(backup_loc_newfolder)
+        if os.path.exists(backup_loc_newfolder):
+            print('Folder Already exists. Dumping pictures in the same folder.')
+        else:
+            os.mkdir(backup_loc_newfolder)
 
         print(f'Folder created. Copying new contents into {backup_loc_newfolder}')
 
         for newfile in tqdm(newfiles):
             shutil.copy(newfile, os.path.join(backup_loc_newfolder, newfile.split('/')[-1]))
 
-        print(f'Copy complete. All photos from {sdcard_loc} have been backed up into {backup_loc}')
+        print(f'Copy complete. All photos from {sdcard_loc}\nhave been backed up into {backup_loc}')
     else:
         print('Chill. All files have been backed up. Proceeding to cleaning')
 
@@ -90,7 +92,7 @@ if __name__ == '__main__':
         arg2 = str(sys.argv[2])
         validate(arg1, arg2)
     else:
-        print(f'Parameters not used. Using default arguments - {sdcard_loc} for SDCard and {backup_loc} for Backup\
+        print(f'Parameters not used. Using default arguments - {sdcard_loc} for SDCard and\n{backup_loc} for Backup\
 Location.\nContinue?')
         isProceed()
 
