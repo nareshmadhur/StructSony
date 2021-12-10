@@ -4,7 +4,7 @@ from tqdm import tqdm
 import glob
 import datetime
 import sys
-
+import filecmp
 
 def isProceed():
     proceed = input()
@@ -17,25 +17,27 @@ def isProceed():
 
 def find_newphotos():
     newphotos = []
-    print('\n-------------\nFinding new files that have not been backed up...\n-------------\n')
+    print('\n-------------\nFinding new photos that have not been backed up...\n-------------\n')
 
     for i in tqdm(os.listdir(os.path.join(sdcard_loc, sdcard_ploc))):
-        if i[0] != '.' and len(glob.glob(os.path.join(backup_loc, '**/') + i, recursive=True)) == 0:
-            newphotos.append(os.path.join(os.path.join(sdcard_loc, sdcard_ploc), i))
-
+        same_filenames = glob.glob(os.path.join(backup_loc, '**/') + i, recursive=True)
+        if i[0] != '.':
+            if not any([filecmp.cmp(os.path.join(sdcard_loc, sdcard_ploc) + '/' + i, j) for j in same_filenames]):
+                newphotos.append(os.path.join(os.path.join(sdcard_loc, sdcard_ploc), i))
     print(f'Find completed. Found {str(len(newphotos))} new photos.')
     return newphotos
 
 
 def find_newvids():
     newvids = []
-    print('\n-------------\nFinding new files that have not been backed up...\n-------------\n')
+    print('\n-------------\nFinding new video files that have not been backed up...\n-------------\n')
 
     for i in tqdm(os.listdir(os.path.join(sdcard_loc, sdcard_vloc))):
-        if i[0] != '.' and len(glob.glob(os.path.join(backup_loc, '**/') + i, recursive=True)) == 0 and (i[-4:]).upper()!='.XML':
-            newvids.append(os.path.join(os.path.join(sdcard_loc, sdcard_vloc), i))
-
-    print(f'Find completed. Found {len(newvids)} new photos.')
+        same_filenames = glob.glob(os.path.join(backup_loc, '**/') + i, recursive=True)
+        if i[0] != '.' and (i[-4:]).upper() != '.XML':
+            if not any([filecmp.cmp(os.path.join(sdcard_loc, sdcard_vloc)+'/'+i,j) for j in same_filenames]):
+                newvids.append(os.path.join(os.path.join(sdcard_loc, sdcard_vloc), i))
+    print(f'Find completed. Found {len(newvids)} new videos.')
     return newvids
 
 
@@ -117,8 +119,8 @@ if __name__ == '__main__':
         arg2 = str(sys.argv[2])
         validate(arg1, arg2)
     else:
-        print(f'Parameters not used. Using default arguments - {sdcard_loc} for SDCard and\n{backup_loc} for Backup\
-Location.\nContinue?')
+        print(f'Parameters not used. Using default arguments\nSONY SD CARD: {sdcard_loc}, and\nBACKUP DRIVE: {backup_loc} for Backup\
+Location.\nPress Y to continue')
         isProceed()
 
     newphotos = find_newphotos()
