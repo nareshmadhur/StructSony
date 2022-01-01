@@ -107,7 +107,7 @@ def validate(arg1, arg2):
 if __name__ == '__main__':
 
     print('\n-------------\nSONY SDCARD BACKUP SCRIPT\n-------------\n')
-    todaystring = datetime.datetime.today().strftime('%d%b%Y')
+    todaystring = datetime.datetime.today().strftime('%Y_%m_%d')
 
     sdcard_loc = '/Volumes/Untitled/'
     sdcard_ploc = 'DCIM/100MSDCF'
