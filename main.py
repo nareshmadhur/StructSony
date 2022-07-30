@@ -19,12 +19,15 @@ def find_newphotos():
     newphotos = []
     print('\n-------------\nFinding new photos that have not been backed up...\n-------------\n')
 
-    for i in tqdm(os.listdir(os.path.join(sdcard_loc, sdcard_ploc))):
-        same_filenames = glob.glob(os.path.join(backup_loc, '**/') + i, recursive=True)
-        if i[0] != '.':
-            if not any([filecmp.cmp(os.path.join(sdcard_loc, sdcard_ploc) + '/' + i, j) for j in same_filenames]):
-                newphotos.append(os.path.join(os.path.join(sdcard_loc, sdcard_ploc), i))
-    print(f'Find completed. Found {str(len(newphotos))} new photos.')
+    if os.path.exists(os.path.join(sdcard_loc, sdcard_ploc)):
+        for i in tqdm(os.listdir(os.path.join(sdcard_loc, sdcard_ploc))):
+            same_filenames = glob.glob(os.path.join(backup_loc, '**/') + i, recursive=True)
+            if i[0] != '.':
+                if not any([filecmp.cmp(os.path.join(sdcard_loc, sdcard_ploc) + '/' + i, j) for j in same_filenames]):
+                    newphotos.append(os.path.join(os.path.join(sdcard_loc, sdcard_ploc), i))
+        print(f'Find completed. Found {str(len(newphotos))} new photos.')
+    else:
+        print('Invalid path error')
     return newphotos
 
 
@@ -32,12 +35,15 @@ def find_newvids():
     newvids = []
     print('\n-------------\nFinding new video files that have not been backed up...\n-------------\n')
 
-    for i in tqdm(os.listdir(os.path.join(sdcard_loc, sdcard_vloc))):
-        same_filenames = glob.glob(os.path.join(backup_loc, '**/') + i, recursive=True)
-        if i[0] != '.' and (i[-4:]).upper() != '.XML':
-            if not any([filecmp.cmp(os.path.join(sdcard_loc, sdcard_vloc)+'/'+i,j) for j in same_filenames]):
-                newvids.append(os.path.join(os.path.join(sdcard_loc, sdcard_vloc), i))
-    print(f'Find completed. Found {len(newvids)} new videos.')
+    if os.path.exists(os.path.join(sdcard_loc, sdcard_vloc)):
+        for i in tqdm(os.listdir(os.path.join(sdcard_loc, sdcard_vloc))):
+            same_filenames = glob.glob(os.path.join(backup_loc, '**/') + i, recursive=True)
+            if i[0] != '.' and (i[-4:]).upper() != '.XML':
+                if not any([filecmp.cmp(os.path.join(sdcard_loc, sdcard_vloc)+'/'+i,j) for j in same_filenames]):
+                    newvids.append(os.path.join(os.path.join(sdcard_loc, sdcard_vloc), i))
+        print(f'Find completed. Found {len(newvids)} new videos.')
+    else:
+        print('Invalid path error')
     return newvids
 
 
@@ -110,9 +116,9 @@ if __name__ == '__main__':
     todaystring = datetime.datetime.today().strftime('%Y_%m_%d')
 
     sdcard_loc = '/Volumes/Untitled/'
-    sdcard_ploc = 'DCIM/100MSDCF'
+    sdcard_ploc = 'DCIM/100_FUJI'
     sdcard_vloc = 'PRIVATE/M4ROOT/CLIP'
-    backup_loc = '/Volumes/MEDIA_NM/Photos/Image Archive/A6400'
+    backup_loc = '/Volumes/MEDIA_NM/Photos/Fuji/XT4'
 
     if len(sys.argv) == 3:
         arg1 = str(sys.argv[1])
